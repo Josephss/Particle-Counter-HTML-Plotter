@@ -1,15 +1,12 @@
 
 # Author: Joseph Mammo
-# Analysis: O(n) ~ has the potential to be improved to O(ln(n))!
+# Analysis: O(n) ~ has the potential to be improved!
 # Current features: - Take in row csv file and hourly and monthly plot the occupied and unoccupied data of the a specific locations
 
 #Import the required libraries
 import csv 
-import matplotlib.pyplot as plt
 from datetime import datetime
 import numpy as np
-import matplotlib.dates as mdates
-import matplotlib.patches as mpatches
 import plotly 
 from plotly import tools
 import plotly.plotly as py
