@@ -9,7 +9,6 @@ from datetime import datetime
 import numpy as np
 import plotly 
 from plotly import tools
-import plotly.plotly as py
 import plotly.graph_objs as go
 
 #read in the CSV and store it in a huge array
@@ -122,7 +121,8 @@ def location(loc_num):
 time_grapher_occu = []
 time_grapher_unoc = []
 time_nor = [8,9,10,11,12,13,14,15,16,17]
-time_avg = [] 
+time_avg = []
+dynamic_avg_time = []
 def hourly(inpt):
     global title
     del time_grapher_occu[:]
@@ -232,7 +232,7 @@ def grapher(inputtt):
         
    
     # Calculates the average for valid values
-    dynamic_avg_time = []
+    
     ctt = 0
     for row in time_avg:
         if (row > 0):
@@ -271,7 +271,7 @@ monthly_grapher = []
 month_nor = [1,2,3,4,5,6,7,8,9,10,11,12]
 month_avg = []
 mon_title = ""
-
+dynamic_avg = []
 def monthly(inptt):
     global mon_title
     
@@ -375,7 +375,7 @@ def monthly(inptt):
         month_avg.append(0)
     
     # Calculates the average for valid values
-    dynamic_avg = []
+    #dynamic_avg = []
     ct = 0
     for row in month_avg:
         if (row > 0):
@@ -416,14 +416,24 @@ def html_plot(num):
     monthly_occ = []
     monthly_unocc = []
     
+    dynamic_avg_updated_time_occ = []
+    dynamic_avg_updated_time_unocc = []
+    dynamic_avg_updated_month_occ = []
+    dynamic_avg_updated_month_unocc = []
+    
     hourly(1)
     for row in time_avg:
         hourly_occ.append(row)
     h_occ_title = title
+    for row in dynamic_avg_time:
+        dynamic_avg_updated_time_occ.append(row)
     del time_grapher_occu[:]
     del time_grapher_unoc[:]  
     del time_avg[:]
+    del dynamic_avg_time[:]
     hourly(2)
+    for row in dynamic_avg_time:
+            dynamic_avg_updated_time_unocc.append(row)    
     for row in time_avg:
         hourly_unocc.append(row)
     h_unocc_title = title
@@ -431,24 +441,36 @@ def html_plot(num):
     for row in month_avg:
         monthly_occ.append(row)
     m_occ_title = mon_title
+    for row in dynamic_avg:
+        dynamic_avg_updated_month_occ.append(row)
     del monthly_grapher[:]
     del month_avg[:]
+    del dynamic_avg[:]
     monthly(2)
     for row in month_avg:
         monthly_unocc.append(row)
+    for row in dynamic_avg:
+        dynamic_avg_updated_month_unocc.append(row)
     m_unocc_title = mon_title
     #plot the data on an HTML page
+    #patch = mpatches.Patch(color='blue', label='Mean:' + str(np.mean(dynamic_avg_time)) + ' per.5 micro meter/ft^3' + "\n" + 'Median: ' + str(np.median(dynamic_avg_time)) + ' per.5 micro meter/ft^3' + "\n" + 'Max: ' + str(np.max(dynamic_avg_time)) + ' per.5 micro meter/ft^3' + "\n" + " Min: " + str(np.min(dynamic_avg_time)) + ' per.5 micro meter/ft^3')
+    
+    #+ ' Mean: ' + str(np.mean(dynamic_avg_time)) + ' per.5 micro meter/ft^3' + ' Median: ' + str(np.median(dynamic_avg_time)) + ' per.5 micro meter/ft^3' + "\n" + 'Max: ' + str(np.max(dynamic_avg_time)) + ' per.5 micro meter/ft^3' + "\n" + " Min: " + str(np.min(dynamic_avg_time)) + ' per.5 micro meter/ft^3'
     trace0 = go.Scatter(
-        x=time_nor, y=hourly_occ, name = 'Hourly ' + h_occ_title
+        x=time_nor, y=hourly_occ, name = 'Hourly ' + h_occ_title + ' | Mean: ' + str(np.mean(dynamic_avg_updated_time_occ)) + ' per.5 micro meter/ft^3' + ' Median: ' + str(np.median(dynamic_avg_updated_time_occ)) + ' per.5 micro meter/ft^3' + "\n" + 'Max: ' + str(np.max(dynamic_avg_updated_time_occ)) + ' per.5 micro meter/ft^3' + "\n" + " Min: " + str(np.min(dynamic_avg_updated_time_occ)) + ' per.5 micro meter/ft^3'
+        ,legendgroup="group"
     )
     trace1 = go.Scatter(
-        x=time_nor, y=hourly_unocc, name = 'Hourly ' + h_unocc_title
+        x=time_nor, y=hourly_unocc, name = 'Hourly ' + h_unocc_title + ' | Mean: ' + str(np.mean(dynamic_avg_updated_time_unocc)) + ' per.5 micro meter/ft^3' + ' Median: ' + str(np.median(dynamic_avg_updated_time_unocc)) + ' per.5 micro meter/ft^3' + "\n" + 'Max: ' + str(np.max(dynamic_avg_updated_time_unocc)) + ' per.5 micro meter/ft^3' + "\n" + " Min: " + str(np.min(dynamic_avg_updated_time_unocc)) + ' per.5 micro meter/ft^3'
+        , legendgroup="group"
     )
     trace2 = go.Scatter(
-      x=month_nor, y=monthly_occ, name = 'Monthly ' + m_occ_title,
+      x=month_nor, y=monthly_occ, name = 'Monthly ' + m_occ_title+ ' | Mean: ' + str(np.mean(dynamic_avg_updated_month_occ)) + ' per.5 micro meter/ft^3' + ' Median: ' + str(np.median(dynamic_avg_updated_month_occ)) + ' per.5 micro meter/ft^3' + "\n" + 'Max: ' + str(np.max(dynamic_avg_updated_month_occ)) + ' per.5 micro meter/ft^3' + "\n" + " Min: " + str(np.min(dynamic_avg_updated_month_occ)) + ' per.5 micro meter/ft^3'
+        , legendgroup="group"
     )
     trace3 = go.Scatter(
-      x=month_nor, y=monthly_unocc, name = 'Monthly ' + m_unocc_title,
+      x=month_nor, y=monthly_unocc, name = 'Monthly ' + m_unocc_title+ ' | Mean: ' + str(np.mean(dynamic_avg_updated_month_unocc)) + ' per.5 micro meter/ft^3' + ' Median: ' + str(np.median(dynamic_avg_updated_month_unocc)) + ' per.5 micro meter/ft^3' + "\n" + 'Max: ' + str(np.max(dynamic_avg_updated_month_unocc)) + ' per.5 micro meter/ft^3' + "\n" + " Min: " + str(np.min(dynamic_avg_updated_month_unocc)) + ' per.5 micro meter/ft^3'
+        , legendgroup="group"
     )
     fig = tools.make_subplots(rows=2, cols=2)
     
@@ -457,7 +479,12 @@ def html_plot(num):
     fig.append_trace(trace2, 2, 1)
     fig.append_trace(trace3, 2, 2)
     
-    fig['layout'].update(title= title + ' and ' + mon_title + ' plot of ' + loc_name)
+    layout = go.Layout(
+        legend=dict(
+            orientation= "h")
+    )    
+    
+    fig['layout'].update(title= title + ' and ' + mon_title + ' plot of ' + loc_name, legend=dict(orientation= "h"))
     plotly.offline.plot(fig, filename = loc_name + ".html")
     return
 #Test
